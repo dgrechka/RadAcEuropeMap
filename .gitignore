@@ -1,0 +1,6 @@
+node_modules
+bower_components
+build
+scripts/ext
+scripts/types
+styles/ext

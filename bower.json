@@ -22,8 +22,8 @@
     "tests"
   ],
   "dependencies": {
-    "idd": "predictionmachines/InteractiveDataDisplay#~1.0.0",
-    "jqeury-ui-1.11.2": "jquery-ui#1.11.2",
+    "idd": "dgrechka/InteractiveDataDisplay#compiled",
+    "jquery-ui-1.11.2": "jquery-ui#1.11.2",
     "jquery-1.10.2": "jquery#1.10.2",
     "rxjs": "~3.1.2",
     "rxjs-jquery": "~1.1.7"
