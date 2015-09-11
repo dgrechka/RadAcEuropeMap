@@ -1,6 +1,6 @@
-﻿///<reference path='Scripts/typings/jquery/jquery.d.ts' /> 
+﻿///<reference path="types/jquery/jquery.d.ts"/>
 ///<reference path='AppInterfaces.ts' /> 
-///<reference path='DataSources/IDataSource.ts' /> 
+///<reference path='IDataSource.ts' /> 
 
 interface IPDFDataSource extends IDataSource {
     GetPDF(lat: number, lon: number): PDF;

@@ -1,6 +1,4 @@
-﻿///<reference path='Scripts/typings/jquery/jquery.d.ts' />
-
-interface IGridViewer {
+﻿interface IGridViewer {
     SetGridData(x: number[], y: number[], h: number[][]): void;
 }
 

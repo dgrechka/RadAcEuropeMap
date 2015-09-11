@@ -1,4 +1,4 @@
-﻿///<reference path='../Scripts/typings/jquery/jquery.d.ts' /> 
+﻿///<reference path='types/jquery/jquery.d.ts' /> 
 
 declare function GammaDistribution(k0: number, b0: number): void;
 

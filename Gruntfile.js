@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     typescript: {
       base: {
         src: ['scripts/*.ts'],
-        dest: 'scripts/',
+        dest: 'build/',
         options: {
           module: 'amd', //or commonjs 
           target: 'es5', //or es3           
@@ -15,21 +15,46 @@ module.exports = function(grunt) {
         }
       }
     },
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: 'src/<%= pkg.name %>.js',
-        dest: 'build/<%= pkg.name %>.min.js'
-      }
+    "tpm-install": {
+      options: {dev: true},
+      all: {src: "bower_components/*/bower.json", dest: "scripts/types/"}
+    },
+  bowercopy: {
+  options: {
+    srcPrefix: 'bower_components',
+    runBower: true,
+    report: true
+    //clean:true
+  },
+  scripts: {
+    options: {
+      destPrefix: 'scripts/ext'
+    },
+    files: {
+      'idd.js': 'idd/dist/idd.js',
+      'jquery-1.10.2.js': 'jquery-1.10.2/build/release.js',
+      'jqeury-ui-1.11.2.js': 'jqeury-ui-1.11.2/jquery-ui.js',
+      'rx.js': 'rxjs/dist/rx.js',
+      'rx.jQuery.js': 'rxjs-jquery/rx.jquery.js'
     }
+  },
+  styles: {
+    options: {
+      destPrefix: 'styles/ext'
+    },
+    files: {
+      'idd.css': 'idd/dist/idd.css',
+      'jquery-ui.js': 'jqeury-ui-1.11.2/themes/smoothness/jquery-ui.css',
+    }
+  }
+}
   });
   
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-typescript');
+  grunt.loadNpmTasks('grunt-bowercopy');
+  grunt.loadNpmTasks('typescript-tpm');
 
   // Default task(s).
-  grunt.registerTask('default', ['typescript']);
+  grunt.registerTask('default', ['bowercopy','tpm-install','typescript']);
 
 };

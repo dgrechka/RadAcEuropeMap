@@ -1,5 +1,6 @@
-﻿class DSFactory {
+﻿/// <reference path="types/jquery/jquery.d.ts"/>
 
+class DSFactory {
     public Create(url: string): JQueryPromise<{ grid_data: IGridDataSource; points_data: IPointsSetDataSource; data_range: IDataRange }> {
         var src = new PolynomialApproxGammaQuantilesDataSource;
         var serializer = new JsonDataSerializer;
