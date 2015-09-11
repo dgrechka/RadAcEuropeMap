@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title></title>
+    <script src="script/distributions.js"></script>
+    <script src="DataSources/IDataSource.js"></script>
+    <script src="DataSources/PolynomialApproxGammaQuantilesDataSource.js"></script>
+    <script src="DataSerializers/JsonDataSerializer.js"></script>
+    <script src="DSFactory.js"></script>
+    <script src="viewerbase.js"></script>
+    <script src="viewer.js"></script>
+    <script src="palette_controller.js"></script>
+    <script src="animator.js"></script>
+    <script src="data_controller.js"></script>
+    <script src="IddPdfViewer.js"></script>
+    <script src="DensityExplorer.js"></script>
+    <script src="Config.js"></script>    
+    <link rel="stylesheet" type="text/css" href="css/app.css" />
+    <link rel="stylesheet" type="text/css" href="css/idd.css" />    
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <script src="script/jquery-1.8.0.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="script/rx.js"></script>
+    <script src="script/rx.jQuery.js"></script>
+    <script src="script/idd-1.0.2.js"></script>
+
+    <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+    <script>
+
+        $(document).ready(function () {            
+            var that = this;
+
+            var appState = {
+                initialConfig: GetConfig()
+            };
+
+            var gridViewer = new Viewer($("#gridContainer"));
+            var densityViewer = new IddPdfViewer($("#densityPlot"));
+            gridViewer.SetPalette(); //TODO: replace hardcoded palette
+            gridViewer.AddControl($('<label>' + appState.initialConfig.mapVariable + '</label>'));                                    
+
+            $("#title").text(appState.initialConfig.applicationTitle);
+            document.title = appState.initialConfig.applicationTitle;
+
+            var firstDs = true;
+            var firstKey;
+            for (var key in appState.initialConfig.dataSources) {
+                var checkedStr = "";
+                if (firstDs) {
+                    checkedStr = 'checked = "checked"';
+                    firstKey = key;
+                    firstDs = false;
+                }
+                else
+                    checkedStr = "";
+
+                var radiobutton = $('<input type = "radio" name = "data_input" value = "' + key + '" ' + checkedStr + '> ' + key + '<br>');
+                $('#dataSourcesSection').append(radiobutton);
+            }
+
+            $(window).resize(function () { gridViewer.UpdateLayout(); });
+
+            var factory = new DSFactory();            
+
+            factory.Create(appState.initialConfig.dataSources[firstKey]).done(function (ds) { //initial connection to the first data source
+                appState.data_controller = new DataController(ds.gridDataSource, ds.pointsDataSource, ds.pdfSource, ds.qfSource, appState.initialConfig.defaultConfInterval * 0.01, gridViewer, gridViewer, densityViewer,gridViewer);
+                $("#dataTimestamp").text(ds.gridDataSource.GetReferenceTimeUTC().toLocaleString());                
+
+                //appState.data_controller.ShowPointOfInterest(58.5, 1.5);
+                appState.data_controller.ShowPointOfInterest(55.4, 37.5);
+
+                var poiChanged = function (lon, lat) {
+                    appState.data_controller.ShowPointOfInterest(lat, lon)
+                }
+
+                gridViewer.PointOfIneterestChangedCallback = poiChanged;
+
+                $('input[name = data_input]:radio').change(function () {
+                    url = appState.initialConfig.dataSources[$("input[name = data_input]:checked").val()];
+
+                    if (url != "") {
+                        console.info("Switching viewer to " + url);
+                        factory.Create(url).done(function (newDs) {
+                            appState.data_controller.ChangeDataSources(newDs.gridDataSource, newDs.pointsDataSource, newDs.pdfSource, newDs.qfSource);
+                            $("#dataTimestamp").text(newDs.gridDataSource.GetReferenceTimeUTC().toLocaleString());
+                        });
+                    }
+                });
+            });
+
+            $("#slider-range").slider({
+                range: "min",
+                min: 0,
+                max: 95,
+                step: 5,
+                value: appState.initialConfig.defaultConfInterval,
+                slide: function (event, ui) {
+                    var v;
+                    if (ui.value == 0)
+                        v = "showing median";
+                    else
+                        v = ui.value + "%";
+                    $("#confInf").text(v);
+                    console.info("showing confidence interval of " + ui.value + "%");
+                    appState.data_controller.ChangeConfidenceInterval(ui.value * 0.01);
+                }
+            });
+            $("#confInf").text(appState.initialConfig.defaultConfInterval + "%");
+
+
+        });
+    </script>
+</head>
+<body>
+
+    <div id="gridContainer" style="z-index:1"></div>
+    <div id="menu" style="position:fixed; z-index: 1000; top:10pt; left:10pt;">
+        <h2 id="title"></h2>
+        <div id=" controlscontainer" style="border:1px solid grey; border-radius:10px; background-color:rgba(255,255,255,0.7); margin:10px; padding:5px">
+            <p>
+                <label>Confidence interval: </label>
+                <label id="confInf" style="font-weight:bold"></label>
+            </p>
+            <div id="slider-range" style="margin:10pt"></div>
+            <hr />
+            <p>Data to explore:</p>
+            <div id="dataSourcesSection"></div>
+            <p>
+                <label>as was on: </label>
+                <label id="dataTimestamp" style="font-weight:bold"></label>
+            </p>
+            <hr />            
+        </div>
+        <div id="densityPlotContainer" style="border:1px solid grey; border-radius:10px; background-color:rgba(255,255,255,0.7); margin:10px; padding:5px; width:350px">            
+            <div id="densityPlot" style="margin:10pt"></div>            
+        </div>
+    </div>
+</body>
+</html>
