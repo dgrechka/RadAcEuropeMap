@@ -24,13 +24,13 @@
     <link rel="stylesheet" type="text/css" href="styles/ext/jquery-ui.css">    
     <script src="js/ext/jquery-1.10.2.js"></script>
     <script src="js/ext/jquery-ui-1.11.2.js"></script>
-    <script src="js/ext/rx.js"></script>
-    <script src="js/ext/rx.jQuery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/3.1.2/rx.lite.min.js"></script>    
     <script src="js/ext/idd.js"></script>
 
     <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
     <script>
-
+        InteractiveDataDisplay.SetWebWorkersPath("js/ext/"); 
+        
         $(document).ready(function () {            
             var that = this;
 

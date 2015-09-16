@@ -35,9 +35,7 @@ module.exports = function(grunt) {
         'idd.heatmapworker.js': 'idd/dist/idd.heatmapworker.js',
         'idd.transforms.js': 'idd/dist/idd.transforms.js',
         'jquery-1.10.2.js': 'jquery-1.10.2/jquery.js',
-        'jquery-ui-1.11.2.js': 'jquery-ui-1.11.2/jquery-ui.js',
-        'rx.js': 'rxjs/dist/rx.js',
-        'rx.jQuery.js': 'rxjs-jquery/rx.jquery.js'
+        'jquery-ui-1.11.2.js': 'jquery-ui-1.11.2/jquery-ui.js',        
       }
     },
     styles: {
@@ -54,6 +52,7 @@ module.exports = function(grunt) {
     main: {
       files: [
         { cwd:'html', src:['index.html'], dest: 'build/', filter: 'isFile',expand:true},        
+        { src:['data/*.json'], dest: 'build/', filter: 'isFile',expand:true},    
         { cwd:'scripts', src:['**/*.js'], dest: 'build/js/', filter: 'isFile',expand:true},
         { cwd: 'styles', src:['**/*.css'], dest: 'build/styles/', filter: 'isFile',expand:true}
         ]
