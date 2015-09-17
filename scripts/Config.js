@@ -3,9 +3,9 @@
 function GetDataSources() {
     var dataSources = [];
     if (DEBUG) {
-        dataSources["based on recent hour"] = "data/1_dr_poly_quantiles.JSON";
-        dataSources["based on recent 24 hours"] = "data/24_dr_poly_quantiles.JSON";
-        dataSources["based on recent 30 days"] = "data/720_dr_poly_quantiles.JSON";
+        dataSources["based on recent hour"] = "data/1_dr_poly_quantiles.json";
+        dataSources["based on recent 24 hours"] = "data/24_dr_poly_quantiles.json";
+        dataSources["based on recent 30 days"] = "data/720_dr_poly_quantiles.json";
     }
     else {
         dataSources["based on recent hour"] = "data.1.json";

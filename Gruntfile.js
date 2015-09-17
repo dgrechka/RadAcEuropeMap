@@ -32,8 +32,6 @@ module.exports = function(grunt) {
       },
       files: {
         'idd.js': 'idd/dist/idd.js',
-        'idd.heatmapworker.js': 'idd/dist/idd.heatmapworker.js',
-        'idd.transforms.js': 'idd/dist/idd.transforms.js',
         'jquery-1.10.2.js': 'jquery-1.10.2/jquery.js',
         'jquery-ui-1.11.2.js': 'jquery-ui-1.11.2/jquery-ui.js',        
       }
